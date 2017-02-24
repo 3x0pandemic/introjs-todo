@@ -17,6 +17,9 @@ router.route('/todos')
     todo.name = req.body.name;
     todo.dueDate = req.body.dueDate;
     todo.description = req.body.description;
+    todo.priority = req.body.priority;
+    // todo.blah = req.body.blah;
+    // console.log(req.body)
 
     todo.save(function(err, todo){
       if(err){
@@ -27,10 +30,12 @@ router.route('/todos')
     })
   })
   .get(function(req, res){
-    Todo.find(function(err, todos){
+    Todo.find({}, function(err, todos){
       if(err){
         return next(err);
       } else {
+        console.log(todos)
+        //This line controls what you send back to the client (web browser)
         res.json(todos)
       }
     })
@@ -54,6 +59,8 @@ router.route('/todos/:todo_id')
         todo.name = req.body.name || todo.name;
         todo.dueDate = req.body.dueDate || todo.dueDate;
         todo.description = req.body.description || todo.description;
+        todo.priority = req.body.priority || todo.priority;
+
 
         todo.save(function(err){
           if(err){
