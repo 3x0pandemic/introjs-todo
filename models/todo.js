@@ -9,6 +9,11 @@ var TodoSchema = new mongoose.Schema({
     type: Number,
     min: 1,
     max: 5
+  },
+  completed: {
+    type: Boolean,
+    required: true,
+    default: false
   }
 });
 

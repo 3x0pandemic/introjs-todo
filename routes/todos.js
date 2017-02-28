@@ -56,11 +56,11 @@ router.route('/todos/:todo_id')
       if(err){
         console.log(err)
       } else {
-        todo.name = req.body.name || todo.name;
-        todo.dueDate = req.body.dueDate || todo.dueDate;
-        todo.description = req.body.description || todo.description;
-        todo.priority = req.body.priority || todo.priority;
-
+        // todo.name = req.body.name || todo.name;
+        // todo.dueDate = req.body.dueDate || todo.dueDate;
+        // todo.description = req.body.description || todo.description;
+        // todo.priority = req.body.priority || todo.priority;
+        todo.completed = 1;
 
         todo.save(function(err){
           if(err){

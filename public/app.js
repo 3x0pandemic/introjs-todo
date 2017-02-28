@@ -3,8 +3,21 @@ var TodoList = React.createClass({
     var self = this;
 
     var todosList = this.props.todos.map(function(t){
+      var completeButton;
+
+      if(!t.completed) {
+        completeButton = (
+          <button className="btn" id="complete"
+            onClick={self.props.handleCompleted.bind(this, t._id)}>
+            completed
+          </button>
+        )
+      } else {
+        completeButton = "";
+      }
+
       return (
-        <div className="panel panel-default">
+        <div id={t._id} className="panel panel-default">
           <div className="panel-header">
            { t.name }
           </div>
@@ -16,11 +29,19 @@ var TodoList = React.createClass({
           </div>
           <div className="panel-footer">
             {t.dueDate}
+          </div>
+          <div className="panel-footer">
             <button className="btn btn-warning"
               onClick={self.props.handleDelete.bind(this, t._id)}>
               delete
             </button>
-
+            &nbsp;
+            <button className="btn btn-warning"
+              onClick={self.props.handleEdit.bind(this, t._id)}>
+              edit
+            </button>
+            &nbsp;
+            {completeButton}
           </div>
         </div>
         )
@@ -121,6 +142,7 @@ var App = React.createClass({
       url: '/api/todos',
       method: 'GET'
     }).done(function(data){
+        console.log(data)
         self.setState({
           todos: data
         })
@@ -148,6 +170,33 @@ var App = React.createClass({
       self.loadTodosFromServer();
     })
   },
+  handleCompleted: function(id) {
+    var id = id;
+    var self = this;
+    $.ajax({
+      url: '/api/todos/' + id,
+      method: 'PUT'
+    }).done(function(){
+      console.log('updated');
+      self.loadTodosFromServer();
+    })
+  },
+  handleEdit: function(id) {
+      console.log(id)
+    React.render(<TodoForm/>, document.getElementById(id));
+
+  },
+  handleSave: function(id) {
+    // var id = id;
+    // var self = this;
+    $.ajax({
+      url: '/api/todos/' + id,
+      method: 'PUT'
+    }).done(function(){
+      console.log('edited todo');
+      // this.loadTodosFromServer();
+    })
+  },
   componentDidMount: function() {
     this.loadTodosFromServer();
   },
@@ -156,10 +205,12 @@ var App = React.createClass({
       <div>
         <h3> Hello World! </h3>
         <TodoList handleDelete={ this.handleDelete }
-                  todos={ this.state.todos } />
+                  todos={ this.state.todos }
+                  handleEdit={ this.handleEdit }
+                  handleCompleted={ this.handleCompleted }/>
         <TodoForm handleSubmit={this.handleSubmit}/>
       </div>
-      )
+    )
   }
 });
 
